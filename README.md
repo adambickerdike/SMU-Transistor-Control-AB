@@ -166,13 +166,6 @@ Press Ctrl+C at any time to cleanly interrupt the measurement process. The progr
 - Check for environmental noise sources
 - Use shielded cables and proper grounding
 
-## License
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-- Based on PyVISA and the SCPI command set for Keysight instruments
-- Developed for semiconductor device characterization research
-
 ## Overview of Transient Measurement (beta)
 This Python program enables time-domain characterization of transistors by applying pulsed gate voltage signals while measuring the resulting drain current response. It uses a Keysight B2912A Source Measure Unit (SMU) to control both gate and drain voltages with precise timing, allowing for detailed analysis of transient behavior.
 
