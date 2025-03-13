@@ -1,6 +1,4 @@
-############################# Transistor Characterization Program ##############################
-
-## Overview
+## Overview of Transfer/Output sweep 
 This Python program provides automated characterization of transistor devices using a Keysight B2912A Source Measure Unit (SMU). It performs alternating transfer and output characteristic measurements in cycles, allowing for studies of device stability, degradation, and hysteresis effects.
 
 ## Key Features
@@ -175,10 +173,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Based on PyVISA and the SCPI command set for Keysight instruments
 - Developed for semiconductor device characterization research
 
-
-############################# Transient Characterization Program ##############################
-
-## Overview
+## Overview of Transient Measurement (beta)
 This Python program enables time-domain characterization of transistors by applying pulsed gate voltage signals while measuring the resulting drain current response. It uses a Keysight B2912A Source Measure Unit (SMU) to control both gate and drain voltages with precise timing, allowing for detailed analysis of transient behavior.
 
 ## Key Features
