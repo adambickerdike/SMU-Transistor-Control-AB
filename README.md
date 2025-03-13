@@ -20,7 +20,8 @@ This Python program provides automated characterization of transistor devices us
 
 1. Clone this repository:
 ```bash
-git clone https://github.com/yourusername/transistor-characterization.git
+git clone https://github.com/adambickerdike/SMU-Transistor-Control-AB
+.git
 cd transistor-characterization
 ```
 
