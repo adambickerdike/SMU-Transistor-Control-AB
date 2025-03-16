@@ -1,10 +1,10 @@
-# Transistor Characterization Suite
+# Transistor Characterisation Suite
 
-A Python-based measurement suite for automated characterization of transistor devices using Keysight B2912A Source Measure Units (SMUs).
+A Python-based measurement suite for automated characterisation of transistor devices using Keysight B2912A Source Measure Units (SMUs).
 
 ## Features
 
-- **Complete Transistor Characterization**: Measure both transfer and output characteristics with a single script
+- **Complete Transistor Characterisfation**: Measure both transfer and output characteristics with a single script
 - **Automated Parameter Extraction**: Calculate field-effect mobility, threshold voltage, and other key parameters
 - **Advanced Plotting**: Visualize data with linear and semi-log plots for comprehensive analysis
 - **Multiple Sweep Modes**:
