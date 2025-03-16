@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Mar 16 12:35:16 2025
-
-@author: bicke
-"""
-
-
-"""
 Transistor Transfer and Output Characteristics Measurement Script
 - Gate connected to Source1 (Channel 1) of the B2912A SMU
 - Drain connected to Source2 (Channel 2) of the B2912A SMU
@@ -51,7 +44,7 @@ OUTPUT_VG_FIXED = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]  # Fixed
 # General settings
 NPLC = 3.0                       # Integration time in power line cycles (0.1 to 10)
 CURRENT_COMPLIANCE = 0.1         # Current compliance (A)
-NUM_CYCLES = 25                  # Number of cycles
+NUM_CYCLES = 5                 # Number of cycles
 DELAY_BETWEEN_SWEEPS = 1.0       # Delay between sweeps (seconds)
 
 # Device parameters
@@ -290,22 +283,22 @@ def perform_transfer_sweep(smu, vd_fixed_list, cycle_num):
         print(f"  Mobility: {mobility:.4f} cm²/Vs")
         print(f"  Threshold Voltage: {vth:.4f} V")
         print(f"  R-squared of linear fit: {r_squared:.4f}")
-        print(f"  Maximum current: {max_current*1e6:.4f} µA")
+        print(f"  Maximum current: {max_current:.10f} A")
         
         # Plot results
         fig, axes = plt.subplots(2, 2, figsize=(14, 10))
         
         # Linear plot
-        axes[0, 0].plot(vg_subset, np.array(id_subset)*1e6)
+        axes[0, 0].plot(vg_subset, np.array(id_subset))
         axes[0, 0].set_xlabel('Gate Voltage (V)')
-        axes[0, 0].set_ylabel('Drain Current (µA)')
+        axes[0, 0].set_ylabel('Drain Current (A)')
         axes[0, 0].set_title(f'Transfer Curve (Vd = {vd}V)')
         axes[0, 0].grid(True)
         
         # Semilog plot
-        axes[0, 1].semilogy(vg_subset, np.abs(np.array(id_subset))*1e6)
+        axes[0, 1].semilogy(vg_subset, np.abs(np.array(id_subset)))
         axes[0, 1].set_xlabel('Gate Voltage (V)')
-        axes[0, 1].set_ylabel('|Drain Current| (µA)')
+        axes[0, 1].set_ylabel('|Drain Current| (A)')
         axes[0, 1].set_title('Transfer Curve (log scale)')
         axes[0, 1].grid(True)
         
@@ -496,25 +489,25 @@ def perform_output_sweep(smu, vg_fixed_list, cycle_num):
         # Print some data points for verification
         print(f"\nVg = {vg}V measurement:")
         for j in range(0, len(vd_subset), max(1, len(vd_subset)//5)):
-            print(f"  Vd = {vd_subset[j]:.2f}V, Id = {id_subset[j]*1e6:.4f}µA, Ig = {ig_subset[j]*1e9:.4f}nA")
+            print(f"  Vd = {vd_subset[j]:.2f}V, Id = {id_subset[j]:.8e}A, Ig = {ig_subset[j]:.8e}A")
         
         # Add to combined output plot
-        plt.plot(vd_subset, np.array(id_subset)*1e6, label=f'Vg = {vg:.1f}V')
+        plt.plot(vd_subset, np.array(id_subset), label=f'Vg = {vg:.1f}V')
         
         # Individual output curve (optional)
         fig, axes = plt.subplots(1, 2, figsize=(12, 6))
         
         # Output curve
-        axes[0].plot(vd_subset, np.array(id_subset)*1e6)
+        axes[0].plot(vd_subset, np.array(id_subset))
         axes[0].set_xlabel('Drain Voltage (V)')
-        axes[0].set_ylabel('Drain Current (µA)')
+        axes[0].set_ylabel('Drain Current (A)')
         axes[0].set_title(f'Output Curve (Vg = {vg}V)')
         axes[0].grid(True)
         
         # Output conductance
-        axes[1].plot(vd_subset, gd*1e6)
+        axes[1].plot(vd_subset, gd)
         axes[1].set_xlabel('Drain Voltage (V)')
-        axes[1].set_ylabel('Output Conductance (µA/V)')
+        axes[1].set_ylabel('Output Conductance (A/V)')
         axes[1].set_title('Output Conductance (gd = dId/dVd)')
         axes[1].grid(True)
         
@@ -540,7 +533,7 @@ def perform_output_sweep(smu, vg_fixed_list, cycle_num):
     
     # Finalize and save the combined output plot
     plt.xlabel('Drain Voltage (V)')
-    plt.ylabel('Drain Current (µA)')
+    plt.ylabel('Drain Current (A)')
     plt.title(f'Output Curves - Cycle {cycle_num}')
     plt.grid(True)
     plt.legend()
@@ -606,9 +599,9 @@ def plot_parameter_vs_cycle(all_transfer_data, TRANSFER_VD_FIXED):
     
     # Max current vs. cycle
     for vd in TRANSFER_VD_FIXED:
-        axes[2].plot(cycles, [curr*1e6 for curr in max_current_data[vd]], 'o-', label=f'Vd = {vd}V')
+        axes[2].plot(cycles, max_current_data[vd], 'o-', label=f'Vd = {vd}V')
     axes[2].set_xlabel('Cycle Number')
-    axes[2].set_ylabel('Maximum Current (µA)')
+    axes[2].set_ylabel('Maximum Current (A)')
     axes[2].set_title('Maximum Current vs. Cycle Number')
     axes[2].grid(True)
     axes[2].legend()
@@ -623,7 +616,7 @@ def plot_parameter_vs_cycle(all_transfer_data, TRANSFER_VD_FIXED):
     for vd in TRANSFER_VD_FIXED:
         params_data[f'Mobility_Vd{vd:.1f}V'] = mobility_data[vd]
         params_data[f'Vth_Vd{vd:.1f}V'] = vth_data[vd]
-        params_data[f'MaxCurrent_Vd{vd:.1f}V_uA'] = [curr*1e6 for curr in max_current_data[vd]]
+        params_data[f'MaxCurrent_Vd{vd:.1f}V_A'] = max_current_data[vd]
     
     filename = f"{BASE_FILENAME}_Parameters_vs_Cycle"
     pd.DataFrame(params_data).to_csv(f"{filename}.csv", index=False)
@@ -700,10 +693,10 @@ try:
                 for data_item in all_transfer_data:
                     if data_item['vd_fixed'] == vd and data_item['cycle'] == i:
                         data = data_item['data']
-                        axes[0].plot(data['Vg'], data['Id']*1e6, label=f'Cycle {i}')
+                        axes[0].plot(data['Vg'], data['Id'], label=f'Cycle {i}')
             
             axes[0].set_xlabel('Gate Voltage (V)')
-            axes[0].set_ylabel('Drain Current (µA)')
+            axes[0].set_ylabel('Drain Current (A)')
             axes[0].set_title(f'Transfer Curves (Vd = {vd}V)')
             axes[0].legend()
             axes[0].grid(True)
@@ -713,10 +706,10 @@ try:
                 for data_item in all_transfer_data:
                     if data_item['vd_fixed'] == vd and data_item['cycle'] == i:
                         data = data_item['data']
-                        axes[1].semilogy(data['Vg'], np.abs(data['Id'])*1e6, label=f'Cycle {i}')
+                        axes[1].semilogy(data['Vg'], np.abs(data['Id']), label=f'Cycle {i}')
             
             axes[1].set_xlabel('Gate Voltage (V)')
-            axes[1].set_ylabel('|Drain Current| (µA)')
+            axes[1].set_ylabel('|Drain Current| (A)')
             axes[1].set_title(f'Transfer Curves (log scale, Vd = {vd}V)')
             axes[1].legend()
             axes[1].grid(True)
@@ -732,7 +725,7 @@ try:
             for data_item in reversed(all_output_data):
                 if data_item['vg_fixed'] == vg:
                     data = data_item['data']
-                    plt.plot(data['Vd'], data['Id']*1e6, label=f'Vg = {vg:.1f}V')
+                    plt.plot(data['Vd'], data['Id'], label=f'Vg = {vg:.1f}V')
                     break
         
         plt.xlabel('Drain Voltage (V)')
